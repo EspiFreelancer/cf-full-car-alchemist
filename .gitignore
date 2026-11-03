@@ -1,4 +1,5 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Remember, OpenCode uses git in standard ways (it can read your repository and respects the .gitignore file). 
 
 # dependencies
 /node_modules
