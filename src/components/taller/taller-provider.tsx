@@ -37,8 +37,10 @@ interface RespuestaPresupuesto {
 interface TallerContextValue {
   ordenes: OrdenDetalle[]
   logs: LogAuditoria[]
+  notificacion: string | null
+  descartarNotificacion: () => void
   cambiarEstado: (ordenId: string, estado: EstadoOrden, actor?: ActorLog) => void
-  agregarAdicional: (ordenId: string, concepto: string, monto: number) => void
+  agregarAdicional: (ordenId: string, concepto: string, monto: number) => Promise<void>
   responderPresupuesto: (
     ordenId: string,
     decision: 'aprobado' | 'rechazado',
@@ -58,6 +60,9 @@ export function TallerProvider({ children }: { children: ReactNode }) {
     ordenes: ordenesIniciales,
     logs: logsIniciales,
   })
+  const [notificacion, setNotificacion] = useState<string | null>(null)
+
+  const descartarNotificacion = useCallback(() => setNotificacion(null), [])
 
   const cambiarEstado = useCallback(
     (ordenId: string, estado: EstadoOrden, actor: ActorLog = 'mecanico') => {
@@ -87,11 +92,12 @@ export function TallerProvider({ children }: { children: ReactNode }) {
           ],
         }
       })
+      setNotificacion(`Estado actualizado: ${ESTADO_CONFIG[estado].label}`)
     },
     [],
   )
 
-  const agregarAdicional = useCallback((ordenId: string, concepto: string, monto: number) => {
+  const agregarAdicional = useCallback(async (ordenId: string, concepto: string, monto: number) => {
     const now = new Date().toISOString()
     const adicionalId = nuevoId('adi')
     const logId = nuevoId('log')
@@ -137,6 +143,7 @@ export function TallerProvider({ children }: { children: ReactNode }) {
         ],
       }
     })
+    setNotificacion('Reparación adicional enviada al cliente')
   }, [])
 
   const responderPresupuesto = useCallback(
@@ -234,6 +241,7 @@ export function TallerProvider({ children }: { children: ReactNode }) {
         },
       ],
     }))
+    setNotificacion('Ingreso registrado correctamente')
     return ordenId
   }, [])
 
@@ -249,12 +257,23 @@ export function TallerProvider({ children }: { children: ReactNode }) {
     () => ({
       ordenes,
       logs: state.logs,
+      notificacion,
+      descartarNotificacion,
       cambiarEstado,
       agregarAdicional,
       responderPresupuesto,
       crearIngreso,
     }),
-    [ordenes, state.logs, cambiarEstado, agregarAdicional, responderPresupuesto, crearIngreso],
+    [
+      ordenes,
+      state.logs,
+      notificacion,
+      descartarNotificacion,
+      cambiarEstado,
+      agregarAdicional,
+      responderPresupuesto,
+      crearIngreso,
+    ],
   )
 
   return <TallerContext.Provider value={value}>{children}</TallerContext.Provider>

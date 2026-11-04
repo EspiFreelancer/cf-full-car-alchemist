@@ -1,6 +1,7 @@
 'use client'
 
 import { Wrench } from 'lucide-react'
+import { BrandLogo } from '@/components/taller/brand-logo'
 import { Patente } from '@/components/taller/status-badge'
 import { useTaller } from '@/components/taller/taller-provider'
 import { formatFechaHora } from '@/lib/taller/format'
@@ -28,12 +29,7 @@ export function ClientPortal({ orderId }: { orderId: string }) {
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col gap-6 px-4 pb-10 pt-6">
       <header className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <span className="flex size-9 items-center justify-center rounded-md bg-foreground text-background">
-            <Wrench className="size-5" aria-hidden="true" />
-          </span>
-          <span className="font-bold">TallerApp</span>
-        </div>
+        <BrandLogo className="h-9 w-auto rounded-sm" />
         <span className="text-xs text-muted-foreground">{`Orden ${orden.id}`}</span>
       </header>
 
@@ -49,7 +45,7 @@ export function ClientPortal({ orderId }: { orderId: string }) {
 
       <ApprovalSection key={orden.id} ordenId={orden.id} pendientes={pendientes} />
 
-      <section aria-labelledby="progreso" className="rounded-2xl border bg-card p-5">
+      <section aria-labelledby="progreso" className="rounded-md border border-border bg-card p-5">
         <h2 id="progreso" className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
           Progreso
         </h2>

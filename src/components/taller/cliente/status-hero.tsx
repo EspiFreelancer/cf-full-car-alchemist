@@ -17,7 +17,10 @@ export function StatusHero({ estado }: { estado: EstadoOrden }) {
   return (
     <section
       aria-live="polite"
-      className={cn('flex flex-col items-center gap-3 rounded-2xl px-6 py-8 text-center shadow-lg', config.solid)}
+      className={cn(
+        'flex flex-col items-center gap-3 rounded-md border border-border/60 px-6 py-8 text-center shadow-lg shadow-black/30',
+        config.solid,
+      )}
     >
       <Icono className="size-16" strokeWidth={2.25} aria-hidden="true" />
       <p className="text-sm font-semibold uppercase tracking-widest opacity-80">Estado actual</p>

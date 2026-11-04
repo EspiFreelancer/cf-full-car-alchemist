@@ -2,13 +2,14 @@ import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { TallerProvider } from '@/components/taller/taller-provider'
+import { Toast } from '@/components/taller/toast'
 import './globals.css'
 
 const geistSans = Geist({ subsets: ['latin'], variable: '--font-geist-sans' })
 const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono' })
 
 export const metadata: Metadata = {
-  title: 'TallerApp — Gestión de Taller Mecánico',
+  title: 'Full Car Alchemist — Gestión de Taller Mecánico',
   description:
     'Estado del vehículo en tiempo real, aprobación digital de presupuestos y panel táctil para mecánicos.',
   generator: 'v0.app',
@@ -32,8 +33,8 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  colorScheme: 'light',
-  themeColor: '#1c1c1c',
+  colorScheme: 'dark',
+  themeColor: '#1a1512',
   width: 'device-width',
   initialScale: 1,
 }
@@ -44,9 +45,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es" className={`light ${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="es" className={`dark ${geistSans.variable} ${geistMono.variable}`}>
       <body className="font-sans antialiased">
-        <TallerProvider>{children}</TallerProvider>
+        <TallerProvider>
+          {children}
+          <Toast />
+        </TallerProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

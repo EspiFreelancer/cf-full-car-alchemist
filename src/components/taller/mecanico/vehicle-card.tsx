@@ -17,9 +17,14 @@ export function VehicleCard({ orden }: { orden: OrdenDetalle }) {
   const totalPendiente = pendientes.reduce((sum, a) => sum + a.monto, 0)
 
   return (
-    <Card className={cn('gap-0 overflow-hidden border-l-8 py-0', ESTADO_CONFIG[orden.estado].border)}>
-      <CardContent className="flex flex-col gap-4 p-4">
-        <div className="flex flex-col gap-1.5">
+    <Card
+      className={cn(
+        'gap-0 overflow-hidden border-l-8 border-y border-r border-border bg-card py-0 shadow-xl shadow-black/20',
+        ESTADO_CONFIG[orden.estado].border,
+      )}
+    >
+      <CardContent className="flex flex-col gap-5 p-4">
+        <div className="flex flex-col gap-2">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <Patente patente={orden.vehiculo.patente} className="text-xl" />
             <StatusBadge estado={orden.estado} className="text-sm" />
@@ -29,16 +34,21 @@ export function VehicleCard({ orden }: { orden: OrdenDetalle }) {
         </div>
 
         {pendientes.length > 0 && (
-          <p className="flex items-center gap-2 rounded-md bg-status-approval/10 px-3 py-2 text-sm font-semibold text-status-approval">
+          <p className="flex items-center gap-2 rounded-md border border-status-approval/40 bg-status-approval/10 px-3 py-2 text-sm font-semibold text-status-approval">
             <AlertTriangle className="size-4 shrink-0" aria-hidden="true" />
-            {`Esperando al cliente: ${formatMonto(totalPendiente)}`}
+            {`Trabajo pausado · Esperando al cliente: ${formatMonto(totalPendiente)}`}
           </p>
         )}
 
-        <StatusButtons
-          estadoActual={orden.estado}
-          onCambiar={(estado) => cambiarEstado(orden.id, estado)}
-        />
+        <div className="flex flex-col gap-2">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
+            Cambiar estado
+          </p>
+          <StatusButtons
+            estadoActual={orden.estado}
+            onCambiar={(estado) => cambiarEstado(orden.id, estado)}
+          />
+        </div>
 
         <AddRepairDialog
           patente={orden.vehiculo.patente}

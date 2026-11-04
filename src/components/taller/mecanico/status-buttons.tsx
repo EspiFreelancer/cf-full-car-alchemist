@@ -12,7 +12,7 @@ interface StatusButtonsProps {
 
 export function StatusButtons({ estadoActual, onCambiar }: StatusButtonsProps) {
   return (
-    <div role="group" aria-label="Cambiar estado" className="grid grid-cols-2 gap-2">
+    <div role="group" aria-label="Cambiar estado" className="flex flex-col gap-3">
       {ESTADOS_ORDEN.map((estado) => {
         const config = ESTADO_CONFIG[estado]
         const activo = estado === estadoActual
@@ -21,12 +21,14 @@ export function StatusButtons({ estadoActual, onCambiar }: StatusButtonsProps) {
             key={estado}
             type="button"
             aria-pressed={activo}
-            onClick={() => onCambiar(estado)}
+            onClick={() => {
+              if (!activo) onCambiar(estado)
+            }}
             className={cn(
-              'flex min-h-16 items-center justify-center gap-2 rounded-lg border-2 px-2 text-center text-base font-bold leading-tight transition-transform active:scale-[0.97] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring/60',
+              'flex min-h-16 items-center justify-center gap-2 rounded-md border-2 px-3 text-center text-lg font-bold leading-tight transition-all active:scale-[0.99] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring/60',
               activo
                 ? cn(config.solid, 'border-transparent shadow-md')
-                : cn('bg-card text-foreground', config.border),
+                : cn('bg-card text-foreground hover:bg-secondary', config.border),
             )}
           >
             {activo ? (

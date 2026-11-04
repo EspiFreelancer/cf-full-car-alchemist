@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { ClientPortal } from '@/components/taller/cliente/client-portal'
 
 export const metadata: Metadata = {
-  title: 'Estado de tu vehículo — TallerApp',
+  title: 'Estado de tu vehículo — Full Car Alchemist',
   robots: { index: false, follow: false },
 }
 

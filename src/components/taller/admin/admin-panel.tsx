@@ -38,7 +38,9 @@ export function AdminPanel() {
                   aria-pressed={seleccion?.id === o.id}
                   className={cn(
                     'flex w-full flex-col gap-2 rounded-lg border-2 bg-card p-3 text-left transition-colors',
-                    seleccion?.id === o.id ? 'border-foreground' : 'border-transparent hover:border-border',
+                    seleccion?.id === o.id
+                      ? 'border-status-approval bg-secondary'
+                      : 'border-transparent hover:border-border',
                   )}
                 >
                   <div className="flex items-center justify-between gap-2">

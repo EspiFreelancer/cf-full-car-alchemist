@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Wrench } from 'lucide-react'
+import { BrandLogo } from '@/components/taller/brand-logo'
 import { cn } from '@/lib/utils'
 
 interface AppHeaderProps {
@@ -14,15 +14,15 @@ const NAV = [
 
 export function AppHeader({ titulo, activo }: AppHeaderProps) {
   return (
-    <header className="sticky top-0 z-30 bg-foreground text-background">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
-        <Link href="/" className="flex items-center gap-2 font-bold">
-          <span className="flex size-9 items-center justify-center rounded-md bg-status-repair text-status-repair-foreground">
-            <Wrench className="size-5" aria-hidden="true" />
-          </span>
-          <span className="flex flex-col leading-tight">
-            <span className="text-xs font-medium uppercase tracking-wider opacity-70">TallerApp</span>
-            <span className="text-base">{titulo}</span>
+    <header className="sticky top-0 z-30 border-b border-border bg-background/95 text-foreground backdrop-blur supports-[backdrop-filter]:bg-background/85">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-3 py-2.5">
+        <Link href="/" className="flex min-w-0 items-center gap-3">
+          <BrandLogo priority className="h-10 w-auto rounded-sm" />
+          <span className="hidden min-w-0 flex-col leading-tight sm:flex">
+            <span className="truncate text-[10px] font-bold uppercase tracking-[0.24em] text-status-approval">
+              Taller
+            </span>
+            <span className="truncate text-sm font-bold">{titulo}</span>
           </span>
         </Link>
         <nav aria-label="Principal" className="flex gap-1">
@@ -32,8 +32,10 @@ export function AppHeader({ titulo, activo }: AppHeaderProps) {
               href={item.href}
               aria-current={activo === item.id ? 'page' : undefined}
               className={cn(
-                'rounded-md px-3 py-2 text-sm font-semibold transition-colors',
-                activo === item.id ? 'bg-background text-foreground' : 'hover:bg-background/15',
+                'rounded-sm px-3 py-2 text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+                activo === item.id
+                  ? 'bg-status-repair text-status-repair-foreground'
+                  : 'text-muted-foreground hover:bg-card hover:text-foreground',
               )}
             >
               {item.label}

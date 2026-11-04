@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { AppHeader } from '@/components/taller/app-header'
 import { MechanicPanel } from '@/components/taller/mecanico/mechanic-panel'
 
-export const metadata: Metadata = { title: 'Panel del Mecánico — TallerApp' }
+export const metadata: Metadata = { title: 'Panel del Mecánico — Full Car Alchemist' }
 
 export default function MecanicoPage() {
   return (

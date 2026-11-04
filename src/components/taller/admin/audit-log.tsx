@@ -37,14 +37,14 @@ export function AuditLog({ logs }: { logs: LogAuditoria[] }) {
             className={cn(
               'flex gap-3 rounded-lg border bg-card p-3',
               log.tipo === 'aprobacion' && 'border-2 border-status-ready',
-              log.tipo === 'rechazo' && 'border-2 border-status-approval',
+              log.tipo === 'rechazo' && 'border-2 border-status-repair',
             )}
           >
             <Icono
               className={cn(
                 'mt-0.5 size-5 shrink-0',
                 log.tipo === 'aprobacion' && 'text-status-ready',
-                log.tipo === 'rechazo' && 'text-status-approval',
+                log.tipo === 'rechazo' && 'text-status-repair',
               )}
               aria-hidden="true"
             />

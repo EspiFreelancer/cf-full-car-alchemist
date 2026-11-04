@@ -135,7 +135,7 @@ export function ApprovalSection({ ordenId, pendientes }: ApprovalSectionProps) {
               className={
                 confirmando === 'aprobado'
                   ? 'h-16 bg-status-ready text-base font-bold text-status-ready-foreground hover:bg-status-ready/90'
-                  : 'h-16 bg-status-approval text-base font-bold text-status-approval-foreground hover:bg-status-approval/90'
+                  : 'h-16 bg-status-repair text-base font-bold text-status-repair-foreground hover:bg-status-repair/90'
               }
             >
               {isPending ? (
@@ -162,13 +162,13 @@ function ResultadoFinal({ resultado }: { resultado: Resultado }) {
       className={
         aprobado
           ? 'flex flex-col items-center gap-3 rounded-2xl border-4 border-status-ready bg-card p-6 text-center'
-          : 'flex flex-col items-center gap-3 rounded-2xl border-4 border-foreground bg-card p-6 text-center'
+          : 'flex flex-col items-center gap-3 rounded-2xl border-4 border-status-repair bg-card p-6 text-center'
       }
     >
       {aprobado ? (
         <CheckCircle2 className="size-14 text-status-ready" aria-hidden="true" />
       ) : (
-        <XCircle className="size-14 text-foreground" aria-hidden="true" />
+        <XCircle className="size-14 text-status-repair" aria-hidden="true" />
       )}
       <h2 className="text-2xl font-extrabold">
         {aprobado ? '¡Presupuesto aprobado!' : 'Presupuesto rechazado'}

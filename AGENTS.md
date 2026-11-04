@@ -26,6 +26,7 @@
 - Every mutation (`cambiarEstado`, `agregarAdicional`, `responderPresupuesto`, `crearIngreso`) is centralized in `src/components/taller/taller-provider.tsx`. Add domain behavior there so it can map 1:1 to future Supabase calls.
 - Domain types: `src/lib/taller/types.ts`; labels/colors: `src/lib/taller/estados.ts`.
 - Canonical statuses are `en_revision`, `esperando_aprobacion`, `en_reparacion`, `listo`. The English status names in `specs/` and the brand skill are design docs, not code values.
+- Brand: use `BrandLogo` (`src/components/taller/brand-logo.tsx`, asset `src/public/full-car-logo.jpg`) and the `--status-*` / base color tokens in `src/app/globals.css`. Do not hardcode palette colors in components.
 - Brand/visual rules: `.opencode/skill/brand-designer/SKILL.md`. Feature requirements and task breakdown: `specs/001-feature-mechanic/`.
 
 ## Gotchas
