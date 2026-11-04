@@ -1,68 +1,44 @@
 # Full Car Alchemist
 
-## Overview
+## What this is
 
-- The goal of this project is to create a web app for managing an auto repair shop, designed with a "mobile-first" approach.
-- The shop employs several mechanics who will use the app exclusively on their mobile phones.
-- A major pain point for the shop is that customers frequently call to check on the status of their vehicles and often take days to approve additional repairs over the phone, which brings work to a standstill.
-- Inventory management is NOT required (this is handled externally in Excel).
+- Mobile-first app for an auto repair shop: mechanic panel (`/mecanico`), public customer portal (`/cliente/[orderId]`, no login), and admin panel (`/admin`).
+- Inventory is intentionally out of scope (managed in Excel).
+- UI copy, routes, and domain identifiers are Spanish/Argentine (`patente`, `orden`, `presupuesto`). Keep that convention.
+- Current state is a v0-generated prototype: all data lives in client-side React state seeded from `src/lib/taller/mock-data.ts`. Supabase is **not wired yet** — only `src/lib/supabase/config.ts` (env placeholders) and an IP-reading Server Action exist. Do not assume tables, RLS, auth, or Supabase deps are present.
 
-## Tech Stack
+## Commands (run from `src/`)
 
-- **Framework/Tech Stack:** Next.js (App Router, React 19) with TypeScript on the frontend.
-- **Backend/Database:** Supabase (PostgreSQL, Auth, Storage, Edge Functions).
-- **Environment:** Node 20+ / Bun.
-- **Deployment:** Vercel.
-- **How to run locally:** `npm run dev` (or `bun dev`).
-- **How to run tests:** `npm test` (Jest / Vitest).
+- The app lives in `src/`, not the repo root. There is no root `package.json`.
+- Package manager is pnpm (`src/pnpm-lock.yaml`, `packageManager: pnpm@12.3.4`).
+- `pnpm install`
+- `pnpm dev` / `pnpm build` / `pnpm start`
+- `pnpm exec tsc --noEmit` — the only available typecheck.
+- No lint or test scripts/configs exist. Do not run or invent `npm test` / `npm run lint`.
+- `src/next.config.mjs` sets `typescript.ignoreBuildErrors`, so `pnpm build` will not catch type errors. Run `tsc` separately.
+- Env: copy `src/.env.example` to `src/.env.local`; keys are `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
 
-## Code Style
+## Architecture
 
-- **Naming:** camelCase for variables/functions, PascalCase for React components and classes.
-- **Architecture:** Modular structure based on atomic components. Prefer Server Components (RSC) by default; use `'use client'` only when strictly necessary (interactivity, React hooks).
-- **Optimization:** Prioritize clean, modular components styled with Tailwind CSS and shadcn/ui.
-- **Comments:** DO NOT write obvious comments. Auto-document code through strict TypeScript typing.
-- **Formatting:** Prettier and ESLint configured in the project.
-- **Asynchrony:** Use native async/await for calls to Server Actions and Supabase clients.
+- Next.js 16 App Router + React 19, Tailwind v4, shadcn/ui (`base-nova` style) in `src/components/ui`.
+- Path alias `@/*` maps to `src/*`.
+- Route pages are Server Component shells; interactive panels are `'use client'` and read/mutate via `useTaller()`.
+- Every mutation (`cambiarEstado`, `agregarAdicional`, `responderPresupuesto`, `crearIngreso`) is centralized in `src/components/taller/taller-provider.tsx`. Add domain behavior there so it can map 1:1 to future Supabase calls.
+- Domain types: `src/lib/taller/types.ts`; labels/colors: `src/lib/taller/estados.ts`.
+- Canonical statuses are `en_revision`, `esperando_aprobacion`, `en_reparacion`, `listo`. The English status names in `specs/` and the brand skill are design docs, not code values.
+- Brand/visual rules: `.opencode/skill/brand-designer/SKILL.md`. Feature requirements and task breakdown: `specs/001-feature-mechanic/`.
 
-## Dependencies
+## Gotchas
 
-- **Allowed:** `tailwindcss`, `lucide-react`, `shadcn/ui` (v0 defaults), `@supabase/supabase-js`, `@supabase/ssr`, `zod` (for schema validation).
-- **AVOID:** Heavy styling libraries (Material UI, Bootstrap), Axios (use native `fetch` or the Supabase client).
+- `TallerProvider` wraps every route in `src/app/layout.tsx`; state is in-memory per tab and resets on reload. Changes made in one view do not sync across tabs/devices until Supabase is connected.
+- The home page links the customer portal to a hardcoded demo order, `ot-7f3a9c`.
+- Tailwind v4 has no `tailwind.config`; theme tokens (including `--status-*`) live in `src/app/globals.css`.
+- `src/pnpm-workspace.yaml` only configures pnpm release-age settings — `src/` is not a multi-package workspace.
 
-## Testing & Quality
+## Conventions
 
-- **Framework:** Vitest or Jest with React Testing Library.
-- **Type Safety:** Zero use of `any`. Everything must be typed with TypeScript, including the database types generated from Supabase.
-- **Linting:** Run `npm run lint` before making any commit.
-
-## API & Security
-
-- **Authentication:** Session management handled by Supabase Auth (RSC/Middleware via `@supabase/ssr`).
-- **Database Access:** Use strict Row Level Security (RLS) in Supabase. Mutative calls from the client must go through secure Server Actions or API Routes.
-- **Data Validation:** Strict server-side validation with Zod before inserting or modifying data in Supabase.
-
-## Git & CI
-
-- **Main branch:** `main` - production-ready code
-- **Development:** Create feature branches from `main`
-- **Naming:** `feature/`, `fix/`, `refactor/` prefixes
-- **Commits:** Use conventional commit format
-- **CI/CD:** The GitHub Actions or Vercel pipeline must pass linting, TypeScript type checking (`tsc`), and unit tests before allowing a merge.
-- **Branching:** Direct commits to `main` or `master` are prohibited. Always work in feature branches (`feature/`) via Pull Requests.
-
-## Project Structure
-
-```
-project/
-├── src/             # Source code
-├── specs/           # Features
-└── .opencode/       # Skills, command and context for AI coding agent
-```
-
-## Notes for AI
-
-1. Check git status before making changes
-2. Run linter after code modifications
-3. Prefer editing existing files over creating new ones
-4. Ask for clarification on ambiguous requirements
+- Prefer Server Components; add `'use client'` only for interactivity/hooks.
+- Strict TypeScript, no `any`. Validate server-side writes with Zod when adding them.
+- Keep dependencies minimal: avoid Axios and heavy UI libraries (MUI, Bootstrap).
+- Use RLS and route all client mutations through Server Actions/API routes once Supabase is connected.
+- `main` is production. Work on branches and open PRs; never commit directly to `main`. Recent history uses `add:`, `fix:`, `refactor:` commit prefixes.
